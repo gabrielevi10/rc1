@@ -67,9 +67,9 @@ int main(int argc, char **argv){
     netLAN4 = pointHelper.Install(rede4.Get(0), rede4.Get(1));
 
     netWAN = pointHelper.Install(redeWAN.Get(0), redeWAN.Get(1));
+    netWAN = pointHelper.Install(redeWAN.Get(0), redeWAN.Get(2));
     netWAN = pointHelper.Install(redeWAN.Get(0), redeWAN.Get(3));
-    netWAN = pointHelper.Install(redeWAN.Get(0), redeWAN.Get(5));
-    netWAN = pointHelper.Install(redeWAN.Get(0), redeWAN.Get(7));
+    netWAN = pointHelper.Install(redeWAN.Get(0), redeWAN.Get(4));
 
 
     Ipv4InterfaceContainer interfaceLAN1, interfaceLAN2, interfaceLAN3, interfaceLAN4, interfaceWAN;
