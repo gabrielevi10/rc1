@@ -94,7 +94,7 @@ int main(int argc, char **argv){
     interfaceLAN4 = ipv4Helper.Assign(netLAN4);
     ipv4Helper.NewNetwork();
 
-    ipv4Helper.SetBase("192.168.101.500", "255.255.255.0");
+    ipv4Helper.SetBase("192.168.100.0", "255.255.255.0");
     interfaceWAN = ipv4Helper.Assign(netWAN);
     ipv4Helper.NewNetwork();
 
@@ -102,15 +102,28 @@ int main(int argc, char **argv){
     //pointHelper.EnablePcapAll(outputFolder+"pcap", true);
 
     //Exportar simulação para netanim
+
+    AnimationInterface anim(outputFolder+"animacaodotrabson.xml");
+    
+    anim.SetConstantPosition(nodes.Get(0), 50, 50);
+    anim.SetConstantPosition(nodes.Get(1), 25, 25);
+    anim.SetConstantPosition(nodes.Get(2), 25, 35);
+    anim.SetConstantPosition(nodes.Get(3), 75, 25);
+    anim.SetConstantPosition(nodes.Get(4), 75, 35);
+    anim.SetConstantPosition(nodes.Get(5), 25, 75);
+    anim.SetConstantPosition(nodes.Get(6), 25, 85);
+    anim.SetConstantPosition(nodes.Get(7), 75, 75);
+    anim.SetConstantPosition(nodes.Get(8), 75, 85);
+
     BaseStationNetDevice b;
     SubscriberStationNetDevice s;
     CsmaNetDevice c;
     UanNetDevice u;
 
-    AnimationInterface anim(outputFolder+"animacaodotrabson.xml");
     anim.SetMaxPktsPerTraceFile(0xFFFFFFFF);
     anim.EnablePacketMetadata(true);
     anim.EnableIpv4RouteTracking (outputFolder+"routingtable-wirelessTRABSON.xml", Seconds (0), Seconds (9), Seconds (0.25));
+
 
     //Executar simulação por 10 segundos e depois destruir
     Simulator::Stop(Seconds(30));
