@@ -31,11 +31,11 @@ int main(int argc, char **argv){
     //LogComponentEnable("LiIonEnergySource", LOG_LEVEL_DEBUG);
     //LogComponentEnableAll(LOG_LEVEL_DEBUG);
 
-	std::string outputFolder = "output/";
+    std::string outputFolder = "output/";
 
-	NodeContainer nodes,rede_LAN_1, rede_LAN_2, rede_WAN;
-	nodes.Create(11);
-	rede_LAN_1.Add(nodes.Get(0));   // a1
+    NodeContainer nodes,rede_LAN_1, rede_LAN_2, rede_WAN;
+    nodes.Create(11);
+    rede_LAN_1.Add(nodes.Get(0));   // a1
     rede_LAN_1.Add(nodes.Get(1));   // a2
     rede_LAN_1.Add(nodes.Get(2));   // a3
     rede_LAN_1.Add(nodes.Get(3));   // a4
@@ -51,10 +51,10 @@ int main(int argc, char **argv){
     rede_WAN.Add(nodes.Get(4));     // c1 ---- d
     rede_WAN.Add(nodes.Get(9));     // c2 -----d => c1 ---- d ----- c2
 
-	Ipv4StaticRoutingHelper staticRouting;
+    Ipv4StaticRoutingHelper staticRouting;
     OlsrHelper olsrRouting;
 
-	Ipv4ListRoutingHelper routeHelper;
+    Ipv4ListRoutingHelper routeHelper;
     routeHelper.Add(staticRouting, 0);
     routeHelper.Add(olsrRouting, 10);
 
@@ -76,33 +76,42 @@ int main(int argc, char **argv){
     
     // internetHelper.EnablePcapIpv4All(outputFolder+"pcap");
 
+    CsmaHelper csma;
+    csma.SetChannelAttribute ("DataRate", StringValue ("100Mbps"));
+    csma.SetChannelAttribute ("Delay", StringValue("5ms"));
+
+    
     NetDeviceContainer network_LAN_1, network_LAN_2, network_WAN; 
     PointToPointHelper pointHelper;
     pointHelper.SetChannelAttribute("Delay",StringValue("5ms"));
+    
+    // NetDeviceContainer csmaDevices;
+    network_LAN_1 = csma.Install (rede_LAN_1);
+    network_LAN_2 = csma.Install (rede_LAN_2);
 
-    // Cria conexões físicas entre a1 e c1
-    network_LAN_1 = pointHelper.Install(rede_LAN_1.Get(0), rede_LAN_1.Get(4));
+    // // Cria conexões físicas entre a1 e c1
+    // network_LAN_1 = pointHelper.Install(rede_LAN_1.Get(0), rede_LAN_1.Get(4));
 
-    // Cria conexões físicas entre a2 e c1
-    network_LAN_1 = pointHelper.Install(rede_LAN_1.Get(1), rede_LAN_1.Get(4));
+    // // Cria conexões físicas entre a2 e c1
+    // network_LAN_1 = pointHelper.Install(rede_LAN_1.Get(1), rede_LAN_1.Get(4));
 
-    // Cria conexões físicas entre a3 e c1
-    network_LAN_1 = pointHelper.Install(rede_LAN_1.Get(2), rede_LAN_1.Get(4));
+    // // Cria conexões físicas entre a3 e c1
+    // network_LAN_1 = pointHelper.Install(rede_LAN_1.Get(2), rede_LAN_1.Get(4));
 
-    // Cria conexões físicas entre a4 e c1
-    network_LAN_1 = pointHelper.Install(rede_LAN_1.Get(3), rede_LAN_1.Get(4));
+    // // Cria conexões físicas entre a4 e c1
+    // network_LAN_1 = pointHelper.Install(rede_LAN_1.Get(3), rede_LAN_1.Get(4));
 
-    // Cria conexões físicas entre b1 e c2
-    network_LAN_2 = pointHelper.Install(rede_LAN_2.Get(0), rede_LAN_2.Get(4));
+    // // Cria conexões físicas entre b1 e c2
+    // network_LAN_2 = pointHelper.Install(rede_LAN_2.Get(0), rede_LAN_2.Get(4));
 
-    // Cria conexões físicas entre b2 e c2
-    network_LAN_2 = pointHelper.Install(rede_LAN_2.Get(1), rede_LAN_2.Get(4));
+    // // Cria conexões físicas entre b2 e c2
+    // network_LAN_2 = pointHelper.Install(rede_LAN_2.Get(1), rede_LAN_2.Get(4));
 
-    // Cria conexões físicas entre b3 e c2
-    network_LAN_2 = pointHelper.Install(rede_LAN_2.Get(2), rede_LAN_2.Get(4));
+    // // Cria conexões físicas entre b3 e c2
+    // network_LAN_2 = pointHelper.Install(rede_LAN_2.Get(2), rede_LAN_2.Get(4));
 
-    // Cria conexões físicas entre b4 e c2
-    network_LAN_2 = pointHelper.Install(rede_LAN_2.Get(3), rede_LAN_2.Get(4));
+    // // Cria conexões físicas entre b4 e c2
+    // network_LAN_2 = pointHelper.Install(rede_LAN_2.Get(3), rede_LAN_2.Get(4));
 
     network_WAN = pointHelper.Install(rede_WAN.Get(0), rede_WAN.Get(1));
     network_WAN = pointHelper.Install(rede_WAN.Get(0), rede_WAN.Get(2));
