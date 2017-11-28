@@ -1,0 +1,55 @@
+1- Encaminhamento: Consiste em mandar pacotes da entrada do roteador para a saída adequada do roteador, utilizando a tabela de encaminhamento(forwarding table).
+Roteamento: Consiste em determinar a rota escolhida por pacotes da fonte até o destino, utilizando algoritmos de roteamento.  É equivalente a um processo de planejar uma viagem desde a partida até o destino.
+
+2- A camada de rede se encarrega da conexão entre dois hosts, enquanto a camada de transporte se encarrega da conexão entre dois processos.
+
+3- Não orientado a conexão: a camada de redes recebe o segmento, encapsula e manda para o próximo roteador de acordo com a tabela de encaminhamento.
+Orientado a conexão: Implementada por meio da abstração de circuitos virtuais.
+
+4- Os circuitos virtuais são implementados da seguinte maneira: é feito um caminho entre os roteadores no qual os segmentos serão enviados, seguindo este mesmo caminho até que todos os segmentos tenham sidos enviados. Os circuitos virtuais provem uma forma eficiente de transmissão, porém se ocorrer uma falha em algum roteador, todo o circuito será recalculado. Consistem em um caminho da fonte até o destino, um VC number, e entradas nas tabelas de encaminhamento.
+
+5- Em redes de comutação por datagrama não existe o conceito de conexão no âmbito da rede, ou seja, não há o estabelecimento de um circuito virtual, os pacotes são encaminhados usando o endereço de destino do host. As tabelas de encaminhamento em comutação de datagramas funcionam com os Longest Prefix Matching, no qual o cálculo do endereço de destino é feito usando o prefixo mais longo que tem um match com o endereço de destino.
+
+6- Internet(datagrama): troca de dados entre computadores, provendo um serviço "elástico". Possui muitos tipos de conexões com diferentes características e uma dificuldade uniforme de serviço. Possui sistemas finais inteligente, composto por computadores, que podem se adaptar, controlar e se recuperar de erros, simples por dentro da rede, complexa no nó.
+ATM(Circuitos virtuais): Envolvida na telefonia, utilizada para comunicação humana, precisando de um serviço confiável e garantido. Possui aparelhos "burros" finais como telefones, complexa dentro da rede. 
+
+7- Um roteador é utilizado pra duas atividades-chave: Executar algoritmos de roteamento/protocolos e encaminhar datagramas do link de entrada para o link de saída. É composto por: portas de entrada, fábrica de switches/matriz de comutação, portas de saída, processador de roteamento(responsável por executar algoritmos de roteamento para preencher a tabela de roteamento).
+
+8- São compostas por um interface com a camada física que recebe os bits, um protocolo da camada de enlace de recebimento, e um buffer de encaminhamento que forma uma fila.
+
+9- As matrizes de comutação se encarregam de transferir um pacote em uma porta de entrada para uma porta de saída adequada. Existem 3 tipos de matrizes: comutação por memória, por barramento e por interconexão. 
+Memória:
+	Mais simples, utilizada nos primeiros roteadores, pois eram computadores comuns. A comutação é operada diretamente pela CPU(roteador de processamento). 
+		Uma porta de entrada no qual chega um pacote sinaliza para o CPU por meio de uma interrupção. O pacote é então copiado para a memória do processador, que por sua vez extraí o endereço de destino do cabeçalho, consultava a porta de saída apropriada na tabela de repasse e copiava o pacote para o buffer de saída. Sendo assim, dois pacotes não podem ser enviados ao mesmo tempo mesmo que seja para portas diferentes, pois o barramento da memória só permite um acesso por vez. Logo, a comutação por memória é mais lenta que as demais, pois precisa de ciclos para leitura e escrita na memória além do processamento pela CPU.
+Barramento:
+	Os datagramas são direcionados da porta de entrada, que insere um rótulo interno ao comutador antes do pacote, indicando a porta de saída local à qual ele está sendo transferido, para a porta de saída através de um barramento compartilhado sem a intervenção do processador de roteamento. Ele é recebido por todas as portas de saída, porém apenas a porta que combina com o rótulo mentém o pacote. O rótulo então é removido na porta de saída. Se n pacotes chegam ao roteador ao mesmo tempo, n-1 teram que esperar, pois apenas 1 usa o barramento por vez.
+Rede de interconexão:
+	Consiste em 2n barramentos que conectam n portas de entrada com n portas de saída. Cada barramento vertical atravessa cada barramento horizontal em um cruzamento, que pode ser aberto ou fechado a qualquer momento pelo controlador do elemento de comutação. Quando um pacote chega da porta A e precisa ser repassado para a porta Y, o controlador do comutador fecha o cruzamento na intersecção dos barramentos A e Y, possibilitando que o pacote saia de A e chegue em apenas em Y. Sendo assim, as redes do tipo crossbar conseguem repassar vários pacotes em paralelo, porém não é possível se dois pacotes forem destinados a mesma porta de saída, obviamente.
+
+10- Formar a fila de saída, encapsular o pacote e enviar pela conexão física.
+
+11- Podem ocorrer dois tipos de enfileiramento:
+	Fila na entrada: quando a velocidade com que a comutação é feita é inferior a soma da taxa de recepção das portas de entrada.
+	Fila na saída: quando a velocidade com que a comutação é feita é superior soma da taxa de envio das portas de saída.
+
+12- A fragmentação de datagramas ocorre nos roteadores. Seu objetivo é permitir que datagramas cujos tamanhaos sejam maiores que a Maximum Transmission Unit - MTU do enlace ao qual um datagrama será enviado sejam enviados de alguma forma. Essa forma é a chamada fragmentação de datagramas, a qual consistem em quebrar o pacote recebido pelo roteador em artefatos chamados fragmentos, de sorte que esses fragmentos são finalmente encapsulados e enviados pelo enlace adequado. Obviamente, esse novo datagrama deve poder ser enviado pelo enlace, ou seja, possuir um tamanho igual ou inferior a MTU. Os fragmentos são remontados no datagrama IP apenas nos sistemas finais.
+
+13- O endereço IP é formado por 32 bits, tanto para  em sua versão 4 (ipv4)geralmente representado por uma notação decimal com pontos. Ex: 192.168.0.1
+
+14- Uma subrede é uma rede que interconecta um roteador e sistemas finais. Cada subrede é endereçada por um número váriavel de bytes, sendo que esses bytes são representados na base 10. O enreçamento IP designa um endereço a essa subrede, no qual a notação /24, conhecida como máscara de sub-rede, indica que os 24 bits mais à esquerda do conjunto de 32 bits definem o endereço da sub-rede.
+
+15- DHCP = Dynamic Host Configuration Protocol: obtem endereços IPs dinâmicos de um servidor, ou seja, sistemas finais recebem um IP dinâmico(cliente servidor TCP). Utilizado de duas maneiras: 
+	Provendo sermpre o mesmo endereço IP para um dado dispositivo sempre que este se conecta a rede.
+	Ou provendo endereçoes temporários para os dispositivos que entram na rede e redistribuindo-os conforme eles vão desconectando da rede. 
+É um protocolo "plug n play".
+
+16- O endereçamento hierarquico permite uma propagação eficiente da informação do roteamento, é por agregação de rotas.
+
+17- Uma NAT(network address translation) é uma estratégia para aumentar a quantidade de dispositivos sob um endereço de IP. Cada aparelho em uma subrede ganha um IP "falso" que vale apenas naquela sub rede, sendo assim, o IP geral é dado na rede e não para cada um dos aparelhos, possibilitando uma maior cobertura com o ipv4.
+Implementação: um roteador NAT deve:
+	para datagramas saindo: substituir (IP fonte, porta) de todo datagrama saindo por (NAT IP, nova porta) como endereço de destino.
+ 	lembrar na tabela NAT todos os pares de tradução (IP fonte, porta) para (NAT IP, nova port).
+ 	para datagramas chegando: substituir (NAT IP, nova porta) nos campos de destino de todos os datagramas chegando com (IP fonte, porta) que esta na NAT table.
+
+18- O principal problema da NAT é o chamado transversal problem, no qual um cliente deseja conectar a um servidor externo ainda não conectado.
+Soluçao 1: Configurar o NAT estaticamente para encaminhar pedidos de conexões chegando após dar uma porta para o servidor
