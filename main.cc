@@ -36,6 +36,7 @@ int main(int argc, char **argv){
 
     std::string outputFolder = "output/";
 
+    // criando os nós da rede
     NodeContainer nodes, csma1, csma2, csma3, csma4;
     nodes.Create(7);
 
@@ -79,7 +80,7 @@ int main(int argc, char **argv){
     AnimationInterface::SetConstantPosition(csma4.Get(3), 87.5, 75);
     AnimationInterface::SetConstantPosition(csma4.Get(4), 87.5, 80);
 
-
+    // instalando o protocolo csma
     CsmaHelper csma;
     csma.SetChannelAttribute ("DataRate", StringValue ("100Mbps"));
     csma.SetChannelAttribute ("Delay", TimeValue (NanoSeconds (6560)));
@@ -94,10 +95,12 @@ int main(int argc, char **argv){
     Ipv4StaticRoutingHelper staticRouting;
     OlsrHelper olsrRouting;
 
+    // instalando o protocolo de roteamento olsr
     Ipv4ListRoutingHelper routeHelper;
     routeHelper.Add(staticRouting, 0);
     routeHelper.Add(olsrRouting, 10);
 
+    // instalando o olsr e o stack de rede
     InternetStackHelper stack;
     stack.SetRoutingHelper(routeHelper);
     stack.Install(csma1);
@@ -109,6 +112,7 @@ int main(int argc, char **argv){
     stack.Install(nodes.Get(5));
     stack.Install(nodes.Get(6));
 
+    // utilizando o protocolo point to point da camada de enlace
     PointToPointHelper pointToPoint;
     pointToPoint.SetDeviceAttribute ("DataRate", StringValue ("5Mbps"));
     pointToPoint.SetChannelAttribute ("Delay", StringValue ("2ms"));
@@ -121,6 +125,7 @@ int main(int argc, char **argv){
     p2p5 = pointToPoint.Install(nodes.Get(5), nodes.Get(2));
     p2p6 = pointToPoint.Install(nodes.Get(6), nodes.Get(2));
 
+    // setando os ips e criando as conexoes fisicas da rede
     Ipv4AddressHelper address;
     Ipv4InterfaceContainer interface1, interface2, interface3, interface4, interface5, interface6;
 
@@ -163,6 +168,7 @@ int main(int argc, char **argv){
 
     Ipv4GlobalRoutingHelper::PopulateRoutingTables ();
 
+    // iniciando as aplicações
     ApplicationContainer clientApp, serverApp, clientApp2, serverApp2, clientApp3, serverApp3;
 
     UdpEchoServerHelper echoServerHelper(8080);
@@ -193,10 +199,10 @@ int main(int argc, char **argv){
     UdpEchoClientHelper echoClientHelper3(csma2.Get(1)->GetObject<Ipv4>()->GetAddress(1,0).GetLocal(),8010);
     clientApp2 = echoClientHelper3.Install(csma3.Get(4)); //Instala cliente echo em 192.168.1.1 ou 2
 
-    serverApp3.Start(Seconds(30));
-    serverApp3.Stop(Seconds(60));
-    clientApp3.Start(Seconds(31));
-    clientApp3.Stop(Seconds(59));
+    serverApp3.Start(Seconds(60));
+    serverApp3.Stop(Seconds(119));
+    clientApp3.Start(Seconds(62));
+    clientApp3.Stop(Seconds(115));
 
     //Exportar simulação para netanim
 
@@ -214,9 +220,8 @@ int main(int argc, char **argv){
     anim.EnableIpv4RouteTracking (outputFolder+"routingtable-wirelessTRABSON.xml", 
                                     Seconds (0), Seconds (9), Seconds (0.25));
 
-
-    //Executar simulação por 10 segundos e depois destruir
-    Simulator::Stop(Seconds(100));
+    //Executar simulação por 120 segundos e depois destruir
+    Simulator::Stop(Seconds(120));
     Simulator::Run();
     Simulator::Destroy();
 }
