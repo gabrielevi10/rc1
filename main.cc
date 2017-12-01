@@ -1,3 +1,10 @@
+/*
+Universidade de Brasília - UnB
+Redes de Computadores 116572 - CIC 
+Alunos: Gabriel Levi - 16/0006490 e Léo Moraes - 16/0011795 
+2/2017
+
+*/
 
 #include <ns3/core-module.h>
 #include <ns3/point-to-point-module.h>
